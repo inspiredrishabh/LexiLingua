@@ -26,8 +26,8 @@ Your API key is now securely configured and hidden from users! Here's how it wor
 ### For Local Development
 
 ```bash
-# Your .env file already contains:
-GEMINI_API_KEY=AIzaSyBPpSptrJ70U0iOlYdH97uAIpQkyb-I8gA
+# Your .env file should contain:
+GEMINI_API_KEY=your_actual_api_key_here
 
 # Just run the app:
 streamlit run legal_app.py
@@ -40,7 +40,7 @@ streamlit run legal_app.py
 1. Upload your code to GitHub (`.env` will be ignored)
 2. In Streamlit Cloud settings, add environment variable:
    ```
-   GEMINI_API_KEY = AIzaSyBPpSptrJ70U0iOlYdH97uAIpQkyb-I8gA
+   GEMINI_API_KEY = your_actual_api_key_here
    ```
 3. Deploy!
 
@@ -49,7 +49,7 @@ streamlit run legal_app.py
 1. Deploy to Heroku
 2. Set environment variable:
    ```bash
-   heroku config:set GEMINI_API_KEY=AIzaSyBPpSptrJ70U0iOlYdH97uAIpQkyb-I8gA
+   heroku config:set GEMINI_API_KEY=your_actual_api_key_here
    ```
 
 #### Option 3: Docker
@@ -57,7 +57,7 @@ streamlit run legal_app.py
 1. Create Dockerfile (API key loaded from environment)
 2. Run with environment variable:
    ```bash
-   docker run -e GEMINI_API_KEY=AIzaSyBPpSptrJ70U0iOlYdH97uAIpQkyb-I8gA your-app
+   docker run -e GEMINI_API_KEY=your_actual_api_key_here your-app
    ```
 
 #### Option 4: Any Cloud Provider
@@ -65,7 +65,7 @@ streamlit run legal_app.py
 Set environment variable in your cloud platform:
 
 ```
-GEMINI_API_KEY=AIzaSyBPpSptrJ70U0iOlYdH97uAIpQkyb-I8gA
+GEMINI_API_KEY=your_actual_api_key_here
 ```
 
 ## 🔒 Security Benefits
