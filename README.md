@@ -1,265 +1,145 @@
-# 🔍 Advanced Text Extractor
+# ⚖️ LexiLingua: The Extraction Engine
 
-A powerful Python-based text extraction tool that can extract text from images and PDFs, including **handwritten content**. This tool uses multiple OCR engines (Tesseract and EasyOCR) to provide the best possible text extraction results.
+This is the core text extraction engine powering our hackathon project, **LexiLingua**. This powerful Python tool is engineered to extract clean, usable text from a wide range of legal documents, including scanned contracts, digital PDFs, and even files with **handwritten notes and signatures**.
 
-## ✨ Features
+LexiLingua's extraction engine uses a multi-layered approach, combining Tesseract and EasyOCR, to ensure the highest possible accuracy. This forms the foundational first step of our legal analysis pipeline.
 
-- **📷 Image Text Extraction**: Supports PNG, JPG, JPEG, BMP, TIFF, GIF
-- **📄 PDF Text Extraction**: Direct text extraction + OCR for scanned PDFs
-- **✍️ Handwritten Text Recognition**: Advanced OCR for handwritten content
-- **🎯 Multiple OCR Engines**: Combines Tesseract and EasyOCR for best results
-- **🖼️ Image Preprocessing**: Automatic image enhancement for better accuracy
-- **🎨 User-Friendly GUI**: Beautiful Streamlit web interface
-- **⌨️ Command Line Interface**: Simple CLI for batch processing
-- **📊 Detailed Analysis**: JSON output with confidence scores and methods used
+## ✨ Core Features
+
+- **📷 Extract from Scanned Contracts & Evidence**: Supports PNG, JPG, JPEG, and other image formats.
+- **📄 Process Digital & Scanned Legal Files**: Handles both native text and image-based (scanned) PDFs.
+- **✍️ Decipher Handwritten Notes & Signatures**: Advanced OCR specifically optimized for handwritten content.
+- **🎯 Multi-Engine Accuracy**: Intelligently combines multiple OCR engines for superior results on diverse documents.
+- **🖼️ Automatic Image Preprocessing**: Enhances scans and photos of documents for optimal OCR accuracy.
+- **🎨 User-Friendly GUI**: A clean Streamlit interface for quick testing and demonstration.
+- **⌨️ Powerful Command Line Interface**: Designed for batch processing multiple legal files.
+- **📊 Detailed JSON Output**: Provides confidence scores and methods used for analysis traceability.
 
 ## 🛠️ Installation
 
 ### Quick Setup (Windows)
 
-1. **Run the installation script:**
-   ```cmd
-   install.bat
-   ```
+1.  **Run the installation script:**
+    ```cmd
+    install.bat
+    ```
 
 ### Manual Installation
 
-1. **Install Python dependencies:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Install Tesseract OCR:**
-
-   **Windows:**
-
-   - Download from [Tesseract GitHub](https://github.com/UB-Mannheim/tesseract/wiki)
-   - Install to default location (usually `C:\Program Files\Tesseract-OCR\`)
-
-   **Linux:**
-
-   ```bash
-   sudo apt-get install tesseract-ocr libtesseract-dev
-   ```
-
-   **macOS:**
-
-   ```bash
-   brew install tesseract
-   ```
+1.  **Install Python dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+2.  **Install Tesseract OCR:**
+    - **Windows:** Download from [Tesseract GitHub](https://github.com/UB-Mannheim/tesseract/wiki) and install to the default location.
+    - **Linux:** `sudo apt-get install tesseract-ocr`
+    - **macOS:** `brew install tesseract`
 
 ## 🚀 Usage
 
-### 1. GUI Version (Recommended)
+### 1. GUI Version (for Demonstration)
 
-Launch the beautiful web interface:
+Launch the Streamlit web interface to easily upload and process a document.
 
 ```bash
 streamlit run app.py
 ```
 
-Features:
+# Extract text from a rental agreement to the console
 
-- Drag & drop file upload
-- Real-time preview
-- Multiple output formats
-- Download results
-- Detailed analysis
+python cli_extractor.py "path/to/your/rental_agreement.pdf"
 
-### 2. Command Line Interface
+# Save text from a scanned contract to a file
 
-For batch processing or scripting:
+python cli_extractor.py "scanned_contract.jpg" -o "contract_text.txt"
 
-```bash
-# Extract text to console
-python cli_extractor.py "path/to/your/file.pdf"
+# Get detailed JSON results for a loan application
 
-# Save text to file
-python cli_extractor.py "input.jpg" -o "output.txt"
+python cli_extractor.py "loan_application.pdf" -f json -o "loan_results.json"
 
-# Get detailed JSON results
-python cli_extractor.py "document.pdf" -f json -o "results.json"
+# Use verbose output for a handwritten note
 
-# Verbose output
-python cli_extractor.py "image.png" -v
-```
+python cli_extractor.py "handwritten_note.png" -v
 
-### 3. Interactive Python
+3. Python API (for Integration)
+   from text_extractor import TextExtractor
 
-```bash
-python text_extractor.py
-```
+# Initialize the extractor
 
-### 4. Python API
-
-```python
-from text_extractor import TextExtractor
-
-# Initialize extractor
 extractor = TextExtractor()
 
-# Extract text (simple)
-text = extractor.extract_text("document.pdf")
-print(text)
+# Extract text from a PDF
 
-# Extract with detailed results
-results = extractor.extract_text("image.jpg", output_format='detailed')
+extracted_text = extractor.extract_text("terms_of_service.pdf")
+print(extracted_text)
+
+# Get detailed results from a scanned image
+
+results = extractor.extract_text("affidavit.jpg", output_format='detailed')
 print(results['combined_text'])
 
-# Access detailed analysis
-print(results['tesseract_results'])
+# Access analysis from a specific engine
+
 print(results['easyocr_results'])
-```
 
-## 📁 Project Structure
+# 📁 Project Structure
 
-```
-Demystifying Legal Documents/
-├── text_extractor.py     # Main extraction engine
-├── app.py               # Streamlit GUI application
-├── cli_extractor.py     # Command line interface
-├── requirements.txt     # Python dependencies
-├── install.bat         # Windows installation script
-└── README.md           # This file
-```
+LexiLingua/
+├── text_extractor.py # The main extraction engine
+├── app.py # Streamlit GUI for demonstration
+├── cli_extractor.py # Command Line Interface
+├── requirements.txt # Python dependencies
+├── install.bat # Windows installation script
+└── README.md # This file
 
-## 🎯 How It Works
+# 🎯 How It Works
 
-### Multi-Engine Approach
+To handle the diverse quality of legal documents—from crisp digital PDFs to old, scanned, handwritten notes—this engine uses a multi-layered approach.
 
-1. **Tesseract OCR**: Great for printed text, multiple configurations
-2. **EasyOCR**: Excellent for handwritten text and complex layouts
-3. **Image Preprocessing**: Multiple enhancement techniques
-4. **Smart Combination**: Automatically selects best results
+Direct Text Extraction: For native PDFs, text is pulled directly for perfect accuracy.
 
-### Image Preprocessing Pipeline
+Tesseract OCR: Excellent for clean, printed text commonly found in official documents.
 
-1. Grayscale conversion
-2. Noise reduction (Gaussian blur)
-3. Binary thresholding (OTSU)
-4. Morphological operations
-5. Contrast enhancement (CLAHE)
+EasyOCR: Specialized for challenging, noisy, or handwritten text.
 
-### PDF Processing
+Intelligent Combination: The engine processes the file with multiple methods and selects the most coherent and complete text as the final output.
 
-1. **Direct Text Extraction**: Fast extraction of selectable text
-2. **OCR Fallback**: For scanned PDFs or images within PDFs
-3. **Page-by-Page Analysis**: Detailed results for each page
+# 💡 Tips for Best Results
 
-## 📊 Output Formats
+For Scanned Legal Documents
+High Resolution: Scan documents at 300 DPI or higher.
 
-### Simple Text Output
+Good Contrast: Ensure text is dark and the background is light and clean.
 
-```
-This is the extracted text from your document...
-```
+Straight Alignment: Avoid skewed or rotated pages.
 
-### Detailed JSON Output
+For Handwritten Affidavits & Notes
+Clear Writing: Neat, legible handwriting yields the best results.
 
-```json
-{
-  "file_path": "document.pdf",
-  "combined_text": "Final extracted text...",
-  "tesseract_results": {
-    "version_0": { "default": "text1", "handwriting": "text2" },
-    "version_1": { "default": "text3", "handwriting": "text4" }
-  },
-  "easyocr_results": {
-    "version_0": "easyocr text 1",
-    "version_1": "easyocr text 2"
-  }
-}
-```
+Good Spacing: Avoid overlapping letters and words.
 
-## 💡 Tips for Better Results
+Dark Ink: Use a dark pen on light, unlined paper if possible.
 
-### Image Quality
+# 🔧 Troubleshooting
 
-- **High Resolution**: Use images with at least 300 DPI
-- **Good Contrast**: Dark text on light background works best
-- **Proper Lighting**: Avoid shadows and glare
-- **Straight Alignment**: Keep text horizontal
+Common Issues
 
-### Handwritten Text
+1. "Tesseract not found" error:
 
-- **Clear Writing**: Neat, legible handwriting
-- **Good Spacing**: Avoid overlapping characters
-- **Dark Ink**: Use dark pen on light paper
-- **Single Language**: Better results with consistent language
+Ensure Tesseract OCR is installed correctly and its location is in your system's PATH.
 
-### PDF Documents
+2. Poor extraction quality:
 
-- **Original PDFs**: Best results with native PDF text
-- **Scanned Quality**: High-resolution scans (300+ DPI)
-- **Clean Pages**: Remove artifacts and noise
+Check the source document's quality. A better scan or photo will dramatically improve results.
 
-## 🔧 Troubleshooting
+3. Memory issues with large multi-page PDFs:
 
-### Common Issues
+Our engine processes page by page, but extremely high-resolution files can be memory intensive. Consider down-sampling if necessary.
 
-**1. "Tesseract not found" error:**
+# 🤝 Contributing
 
-- Install Tesseract OCR from the official source
-- Ensure it's in your system PATH
-- Check the installation path in `text_extractor.py`
+This is a hackathon project, but contributions are welcome! Feel free to report bugs or suggest improvements by creating an issue.
 
-**2. Poor text extraction quality:**
+# 📄 License
 
-- Try different image preprocessing options
-- Ensure good image quality and lighting
-- Use higher resolution images
-- Check if text is clearly visible
-
-**3. Memory issues with large files:**
-
-- Process files in smaller chunks
-- Reduce image resolution if too high
-- Close other applications to free memory
-
-**4. Installation errors:**
-
-- Update pip: `python -m pip install --upgrade pip`
-- Use virtual environment
-- Install packages one by one if batch install fails
-
-### Performance Optimization
-
-- **GPU Acceleration**: EasyOCR can use GPU for faster processing
-- **Batch Processing**: Process multiple files together
-- **Image Resizing**: Resize very large images to optimal size
-- **Format Selection**: Use appropriate output format for your needs
-
-## 🤝 Contributing
-
-Contributions are welcome! Here are ways you can help:
-
-1. **Report Bugs**: Create issues for any problems you encounter
-2. **Feature Requests**: Suggest new features or improvements
-3. **Code Contributions**: Submit pull requests with enhancements
-4. **Documentation**: Help improve documentation and examples
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Tesseract OCR**: Google's OCR engine
-- **EasyOCR**: JaidedAI's OCR library
-- **OpenCV**: Computer vision library
-- **Streamlit**: Web app framework
-- **PyMuPDF**: PDF processing library
-
-## 📞 Support
-
-If you encounter any issues or need help:
-
-1. Check the troubleshooting section above
-2. Review the installation requirements
-3. Create an issue with detailed error information
-4. Include your system information and file types
-
----
-
-**Happy Text Extracting! 🎉**
+This project is licensed under the MIT License.
