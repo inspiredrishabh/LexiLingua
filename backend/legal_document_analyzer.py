@@ -70,7 +70,7 @@ class LegalDocumentAnalyzer:
     
     def simplify_legal_document(self, document_text: str, user_language: str = "English") -> Dict[str, Any]:
         """
-        Simplify legal document using Gemini AI
+        Simplify legal document using Gemini AI with enhanced structured analysis
         
         Args:
             document_text: The extracted text from legal document
@@ -125,14 +125,58 @@ class LegalDocumentAnalyzer:
             "document_type": "Type of legal document (e.g., Rental Agreement, Loan Contract, Terms of Service)",
             "key_parties": ["List of main parties involved"],
             "main_purpose": "Brief explanation of what this document is for",
+            "complete_gist": "A comprehensive 2-3 paragraph summary explaining the entire document in simple terms",
             "key_terms_simplified": [
                 {{
                     "original_clause": "Original complex legal text",
                     "simplified_explanation": "Easy-to-understand explanation",
                     "importance_level": "High/Medium/Low",
-                    "potential_risk": "What could go wrong if you don't understand this"
+                    "potential_risk": "What could go wrong if you don't understand this",
+                    "is_jargon": true,
+                    "plain_english": "Simple everyday language explanation"
                 }}
             ],
+            "legal_jargons": [
+                {{
+                    "term": "Legal term or phrase",
+                    "definition": "Simple explanation in everyday language",
+                    "example": "How it applies in this document",
+                    "why_important": "Why you need to understand this"
+                }}
+            ],
+            "important_points": [
+                {{
+                    "point": "Key important point from the document",
+                    "why_important": "Why this matters to you",
+                    "action_required": "What you need to do about this"
+                }}
+            ],
+            "risk_assessment": {{
+                "high_risk_items": [
+                    {{
+                        "risk": "Description of the risk",
+                        "risk_factor": "High/Medium/Low",
+                        "potential_impact": "What could happen",
+                        "mitigation": "How to reduce this risk"
+                    }}
+                ],
+                "medium_risk_items": [
+                    {{
+                        "risk": "Description of the risk",
+                        "risk_factor": "Medium",
+                        "potential_impact": "What could happen",
+                        "mitigation": "How to reduce this risk"
+                    }}
+                ],
+                "low_risk_items": [
+                    {{
+                        "risk": "Description of the risk",
+                        "risk_factor": "Low",
+                        "potential_impact": "What could happen",
+                        "mitigation": "How to reduce this risk"
+                    }}
+                ]
+            }},
             "important_dates": ["Any important deadlines or dates"],
             "financial_obligations": [
                 {{
@@ -157,10 +201,11 @@ class LegalDocumentAnalyzer:
         
         Make sure your explanations are:
         - Written in simple, everyday language
-        - Avoid legal jargon
+        - Avoid legal jargon unless explaining it
         - Explain potential consequences clearly
         - Highlight any risks or red flags
         - Be helpful and protective of the user's interests
+        - Provide structured, actionable information
         """
         
         try:
@@ -268,7 +313,7 @@ class LegalDocumentAnalyzer:
     
     def generate_summary_report(self, analysis: Dict[str, Any], user_language: str = "English") -> str:
         """
-        Generate a user-friendly summary report
+        Generate a comprehensive user-friendly summary report
         
         Args:
             analysis: The analysis dictionary from simplify_legal_document
@@ -293,8 +338,8 @@ class LegalDocumentAnalyzer:
             return analysis["analysis"]
         
         try:
-            report = "📋 LEGAL DOCUMENT ANALYSIS REPORT\n"
-            report += "=" * 50 + "\n\n"
+            report = "📋 COMPREHENSIVE LEGAL DOCUMENT ANALYSIS REPORT\n"
+            report += "=" * 60 + "\n\n"
             
             # Document Type
             if analysis.get('document_type'):
@@ -304,12 +349,67 @@ class LegalDocumentAnalyzer:
             if analysis.get('main_purpose'):
                 report += f"🎯 MAIN PURPOSE:\n{analysis['main_purpose']}\n\n"
             
+            # Complete Gist
+            if analysis.get('complete_gist'):
+                report += f"📖 COMPLETE GIST:\n{analysis['complete_gist']}\n\n"
+            
             # Key Parties
             if analysis.get('key_parties'):
                 report += f"👥 KEY PARTIES:\n"
                 for party in analysis['key_parties']:
                     report += f"• {party}\n"
                 report += "\n"
+            
+            # Important Points
+            if analysis.get('important_points'):
+                report += f"⭐ IMPORTANT POINTS:\n"
+                for i, point in enumerate(analysis['important_points'], 1):
+                    report += f"{i}. {point.get('point', '')}\n"
+                    if point.get('why_important'):
+                        report += f"   Why important: {point['why_important']}\n"
+                    if point.get('action_required'):
+                        report += f"   Action required: {point['action_required']}\n"
+                    report += "\n"
+            
+            # Legal Jargons
+            if analysis.get('legal_jargons'):
+                report += f"📚 LEGAL JARGONS EXPLAINED:\n"
+                for jargon in analysis['legal_jargons']:
+                    report += f"• {jargon.get('term', '')}: {jargon.get('definition', '')}\n"
+                    if jargon.get('example'):
+                        report += f"  Example: {jargon['example']}\n"
+                    if jargon.get('why_important'):
+                        report += f"  Why important: {jargon['why_important']}\n"
+                    report += "\n"
+            
+            # Risk Assessment
+            if analysis.get('risk_assessment'):
+                risk_data = analysis['risk_assessment']
+                
+                # High Risk Items
+                if risk_data.get('high_risk_items'):
+                    report += f"🚨 HIGH RISK FACTORS:\n"
+                    for risk in risk_data['high_risk_items']:
+                        report += f"• {risk.get('risk', '')}\n"
+                        report += f"  Impact: {risk.get('potential_impact', '')}\n"
+                        report += f"  Mitigation: {risk.get('mitigation', '')}\n\n"
+                
+                # Medium Risk Items
+                if risk_data.get('medium_risk_items'):
+                    report += f"⚠️ MEDIUM RISK FACTORS:\n"
+                    for risk in risk_data['medium_risk_items']:
+                        report += f"• {risk.get('risk', '')}\n"
+                        report += f"  Impact: {risk.get('potential_impact', '')}\n"
+                        report += f"  Mitigation: {risk.get('mitigation', '')}\n\n"
+                
+                # Low Risk Items
+                if risk_data.get('low_risk_items'):
+                    report += f"ℹ️ LOW RISK FACTORS:\n"
+                    for risk in risk_data['low_risk_items']:
+                        report += f"• {risk.get('risk', '')}\n"
+                        if risk.get('mitigation'):
+                            report += f"  Mitigation: {risk['mitigation']}\n"
+                    report += "\n"
             
             # Important Dates
             if analysis.get('important_dates'):
@@ -388,7 +488,7 @@ class LegalDocumentAnalyzer:
                     report += f"• {clause}\n"
                 report += "\n"
             
-            report += "=" * 50 + "\n"
+            report += "=" * 60 + "\n"
             report += "⚖️  IMPORTANT: This is AI-generated analysis for informational purposes only.\n"
             report += "Always consult with a qualified legal professional before making important legal decisions."
             
@@ -396,6 +496,76 @@ class LegalDocumentAnalyzer:
             
         except Exception as e:
             return f"Error generating report: {str(e)}"
+
+    def analyze_document(self, document_text: str) -> str:
+        """
+        Main document analysis method for API compatibility
+        """
+        analysis = self.simplify_legal_document(document_text)
+        if "error" in analysis:
+            return analysis.get("message", "Error analyzing document")
+        
+        return self.generate_summary_report(analysis)
+    
+    def explain_jargon(self, document_text: str) -> str:
+        """
+        Extract and explain legal jargon from the document
+        """
+        prompt = f"""
+        Analyze the following legal document text and identify all legal jargon, technical terms, and complex phrases.
+        For each term, provide a simple explanation in everyday language.
+        
+        Document Text:
+        {document_text}
+        
+        Format your response as:
+        TERM: Simple explanation
+        
+        Focus on terms that a regular person might not understand.
+        """
+        
+        try:
+            response = self.model.generate_content(prompt)
+            return response.text
+        except Exception as e:
+            return f"Error explaining jargon: {str(e)}"
+    
+    def assess_risks(self, document_text: str) -> str:
+        """
+        Assess potential risks in the legal document
+        """
+        prompt = f"""
+        Analyze the following legal document and identify potential risks, red flags, and areas of concern.
+        Categorize risks as HIGH, MEDIUM, or LOW priority.
+        
+        Document Text:
+        {document_text}
+        
+        For each risk, explain:
+        1. What the risk is
+        2. Why it's concerning
+        3. Potential consequences
+        4. How to mitigate it
+        
+        Format as:
+        RISK LEVEL: [HIGH/MEDIUM/LOW]
+        Risk: [Description]
+        Concern: [Why it matters]
+        Consequences: [What could happen]
+        Mitigation: [How to reduce risk]
+        """
+        
+        try:
+            response = self.model.generate_content(prompt)
+            return response.text
+        except Exception as e:
+            return f"Error assessing risks: {str(e)}"
+    
+    def answer_question(self, question: str, document_text: str) -> str:
+        """
+        Answer specific questions about the document
+        """
+        return self.ask_question_about_document(document_text, question)
 
     def process_document_complete(self, file_path: str, user_language: str = "English") -> Dict[str, Any]:
         """
