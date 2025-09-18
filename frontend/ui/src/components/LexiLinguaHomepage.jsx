@@ -1,13 +1,36 @@
-import React, { useState } from 'react';
-import { Upload, FileText, Shield, Globe, CheckCircle, ArrowRight, Zap, Eye, MessageSquare, Scale, Lock, Award, Sun, Moon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Upload, FileText, Shield, Globe, CheckCircle, ArrowRight, Zap, Eye, MessageSquare, Scale, Lock, Award, Sun, Moon, HelpCircle, Laptop, UserCheck, Smile } from 'lucide-react';
 
 const LexiLinguaHomepage = () => {
   const [uploadHover, setUploadHover] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showUploadBox, setShowUploadBox] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
+
+  // Scroll detection for upload box
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const triggerPoint = 300; // Show upload box after scrolling 300px
+      setShowUploadBox(scrollPosition > triggerPoint);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Animation cycle for How It Works section
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % 4); // 4 steps total
+    }, 2000); // Change step every 2 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const features = [
     {
@@ -63,6 +86,45 @@ const LexiLinguaHomepage = () => {
     "Demolishes language barriers by examining documents in any language and returning insights in your preferred language",
     "Identifies hidden risks and predatory clauses prior to signing, serving as a vital security net",
     "Creates a clear 'Next Steps' checklist to lead users from confusion to completion"
+  ];
+
+  const animatedSteps = [
+    {
+      icon: <HelpCircle className="w-16 h-16" />,
+      title: "Confusing Legal Jargon",
+      description: "Can't understand the contract",
+      bgColor: isDarkMode ? 'bg-red-900' : 'bg-red-100',
+      iconColor: isDarkMode ? 'text-red-400' : 'text-red-600',
+      image: "/confused.jpeg",
+      emotion: "confused"
+    },
+    {
+      icon: <FileText className="w-16 h-16" />,
+      title: "Complicated Paperwork",
+      description: "Struggling to make sense of details",
+      bgColor: isDarkMode ? 'bg-orange-900' : 'bg-orange-100',
+      iconColor: isDarkMode ? 'text-orange-400' : 'text-orange-600',
+      image: "/Gemini_Generated_Image_8a650v8a650v8a65.png",
+      emotion: "struggling"
+    },
+    {
+      icon: <Scale className="w-16 h-16" />,
+      title: "Costly Legal Help",
+      description: "Lawyers charge high fees for clarity",
+      bgColor: isDarkMode ? 'bg-yellow-900' : 'bg-yellow-100',
+      iconColor: isDarkMode ? 'text-yellow-400' : 'text-yellow-600',
+      image: "/Gemini_Generated_Image_bb5ztjbb5ztjbb5z.png",
+      emotion: "expensive"
+    },
+    {
+      icon: <Shield className="w-16 h-16" />,
+      title: "Risk of Wrong Decisions",
+      description: "Signing without full understanding",
+      bgColor: isDarkMode ? 'bg-purple-900' : 'bg-purple-100',
+      iconColor: isDarkMode ? 'text-purple-400' : 'text-purple-600',
+      image: "/Gemini_Generated_Image_xiif1nxiif1nxiif.png",
+      emotion: "risky"
+    }
   ];
 
   const trustIndicators = [
@@ -179,8 +241,12 @@ const LexiLinguaHomepage = () => {
             </div>
           </div>
           
-          {/* Enhanced Upload Section - Now Below Content */}
-          <div className="max-w-6xl mx-auto mt-8">
+          {/* Enhanced Upload Section - Appears on Scroll */}
+          <div className={`max-w-6xl mx-auto mt-8 transition-all duration-700 ease-in-out transform ${
+            showUploadBox 
+              ? 'opacity-100 translate-y-0 scale-100' 
+              : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
+          }`}>
             <div 
               className={`relative ${themeClasses.uploadBg} border-2 border-dashed rounded-2xl p-8 transition-all duration-300 shadow-lg ${uploadHover ? `${themeClasses.uploadBorder} shadow-xl` : `${themeClasses.border}`}`}
               onMouseEnter={() => setUploadHover(true)}
@@ -291,6 +357,99 @@ const LexiLinguaHomepage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works - Animated Section */}
+      <section id="how-it-works" className={`px-8 py-20 ${themeClasses.cardBg} transition-colors duration-300`}>
+        <div className="max-w-full mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className={`text-4xl font-bold ${themeClasses.primaryText} mb-6`}>Common Legal Document Challenges</h2>
+            <p className={`text-xl ${themeClasses.mutedText} max-w-3xl mx-auto`}>
+              See the problems that drive people to seek LexiLingua's solutions
+            </p>
+          </div>
+          
+          {/* Animated Character Journey */}
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-4 gap-8 mb-12">
+              {animatedSteps.map((step, index) => (
+                <div key={index} className="text-center relative">
+                  <div className={`relative mb-4 transition-all duration-500 ${
+                    currentStep === index ? 'scale-110 z-10' : 'scale-100 opacity-70'
+                  }`}>
+                    <div className={`w-20 h-20 mx-auto rounded-full overflow-hidden border-4 ${
+                      currentStep === index ? 'border-amber-500 shadow-lg' : 'border-gray-200'
+                    } transition-all duration-500`}>
+                      <img 
+                        src={step.image} 
+                        alt={step.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {currentStep === index && (
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      </div>
+                    )}
+                  </div>
+                  <h3 className={`text-sm font-semibold ${themeClasses.primaryText} mb-2 ${
+                    currentStep === index ? 'text-amber-600' : ''
+                  } transition-colors duration-500`}>
+                    {step.title}
+                  </h3>
+                  {index < animatedSteps.length - 1 && (
+                    <div className="hidden md:block absolute top-10 left-full w-8 h-0.5 bg-gray-300 transform -translate-y-1/2">
+                      <div className={`h-full bg-amber-500 transition-all duration-500 ${
+                        currentStep > index ? 'w-full' : 'w-0'
+                      }`}></div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Active Step Details */}
+            <div className={`${themeClasses.sectionBg} ${themeClasses.border} border rounded-2xl p-8 text-center transition-all duration-500`}>
+              <div className={`w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-4 border-amber-500 shadow-lg`}>
+                <img 
+                  src={animatedSteps[currentStep].image} 
+                  alt={animatedSteps[currentStep].title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className={`text-2xl font-bold ${themeClasses.primaryText} mb-4`}>
+                {animatedSteps[currentStep].title}
+              </h3>
+              <p className={`text-lg ${themeClasses.mutedText} max-w-2xl mx-auto`}>
+                {animatedSteps[currentStep].description}
+              </p>
+              
+              {/* Progress Dots */}
+              <div className="flex justify-center space-x-3 mt-8">
+                {animatedSteps.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentStep(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      currentStep === index 
+                        ? 'bg-amber-500 scale-125' 
+                        : isDarkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="text-center mt-12">
+              <button className={`${themeClasses.primaryBtn} text-white px-8 py-4 rounded-lg font-semibold transition-colors shadow-lg text-lg flex items-center justify-center gap-3 mx-auto`}>
+                <Upload className="w-6 h-6" />
+                Solve These Problems with LexiLingua
+                <ArrowRight className="w-6 h-6" />
+              </button>
+            </div>
           </div>
         </div>
       </section>
