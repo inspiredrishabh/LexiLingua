@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, FileText, Shield, Globe, CheckCircle, ArrowRight, Zap, Eye, MessageSquare, Scale, Lock, Award, Sun, Moon, HelpCircle, Laptop, UserCheck, Smile } from 'lucide-react';
+import { Upload, FileText, Shield, Globe, CheckCircle, ArrowRight, Zap, Eye, MessageSquare, Scale, Lock, Award, Sun, Moon, HelpCircle, Laptop, UserCheck, Smile, Bot } from 'lucide-react';
 
 const LexiLinguaHomepage = () => {
-  const [uploadHover, setUploadHover] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [showUploadBox, setShowUploadBox] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // Scroll detection for upload box
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const triggerPoint = 300; // Show upload box after scrolling 300px
-      setShowUploadBox(scrollPosition > triggerPoint);
-    };
+  // Navigation functions
+  const goToUpload = () => {
+    window.location.href = '/upload';
+  };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const goToDemo = () => {
+    window.location.href = '/demo';
+  };
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   // Animation cycle for How It Works section
   useEffect(() => {
@@ -36,28 +38,28 @@ const LexiLinguaHomepage = () => {
     {
       icon: <FileText className="w-8 h-8" />,
       title: "Processes Handwritten Documents",
-      description: "Our cutting-edge OCR is designed to read scanned handwritten text correctly—a huge hurdle where the majority of digital tools don't stand a chance.",
+      description: "Our cutting-edge OCR powered by Gemini AI is designed to read scanned handwritten text correctly—a huge hurdle where the majority of digital tools don't stand a chance.",
       lightColor: "bg-blue-700",
       darkColor: "bg-blue-600"
     },
     {
       icon: <Globe className="w-8 h-8" />,
       title: "Better Cross-Language Analysis",
-      description: "Contrary to simple translators that lack legal subtlety, our AI is trained to interpret legal meaning and intent, not simply words.",
+      description: "Contrary to simple translators that lack legal subtlety, our Gemini AI is trained to interpret legal meaning and intent, not simply words.",
       lightColor: "bg-green-700",
       darkColor: "bg-green-600"
     },
     {
       icon: <Shield className="w-8 h-8" />,
       title: "Law-Specific Legal Insights",
-      description: "We offer targeted risk analysis and clause deconstruction, far beyond generic AI summarizers that lack legal context understanding.",
+      description: "We offer targeted risk analysis and clause deconstruction powered by Gemini AI, far beyond generic AI summarizers that lack legal context understanding.",
       lightColor: "bg-red-700",
       darkColor: "bg-red-600"
     },
     {
       icon: <Zap className="w-8 h-8" />,
       title: "Instant & Accessible",
-      description: "We provide an instant, low-cost initial review, avoiding the expense and wait involved with conventional legal advice.",
+      description: "We provide an instant, low-cost initial review using advanced Gemini AI, avoiding the expense and wait involved with conventional legal advice.",
       lightColor: "bg-indigo-700",
       darkColor: "bg-indigo-600"
     }
@@ -171,14 +173,21 @@ const LexiLinguaHomepage = () => {
               <div className={`w-10 h-10 ${themeClasses.iconBg} rounded-lg flex items-center justify-center`}>
                 <FileText className="w-6 h-6 text-white" />
               </div>
-              <div className={`text-2xl font-bold ${themeClasses.primaryText}`}>
-                LexiLingua
+              <div>
+                <div className={`text-2xl font-bold ${themeClasses.primaryText}`}>
+                  LexiLingua
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className={`text-xs ${themeClasses.mutedText}`}>Powered by</span>
+                  <Bot className={`w-3 h-3 ${themeClasses.secondaryText}`} />
+                  <span className={`text-xs font-semibold ${themeClasses.secondaryText}`}>Gemini AI</span>
+                </div>
               </div>
             </div>
             <div className={`hidden md:flex space-x-8 ${themeClasses.mutedText}`}>
-              <a href="#features" className={`hover:${themeClasses.primaryText.split(' ')[0]} transition-colors font-medium`}>Features</a>
-              <a href="#how-it-works" className={`hover:${themeClasses.primaryText.split(' ')[0]} transition-colors font-medium`}>How It Works</a>
-              <a href="#pricing" className={`hover:${themeClasses.primaryText.split(' ')[0]} transition-colors font-medium`}>Pricing</a>
+              <button onClick={() => scrollToSection('features')} className={`hover:${themeClasses.primaryText.split(' ')[0]} transition-colors font-medium`}>Features</button>
+              <button onClick={() => scrollToSection('how-it-works')} className={`hover:${themeClasses.primaryText.split(' ')[0]} transition-colors font-medium`}>How It Works</button>
+              <button onClick={goToDemo} className={`hover:${themeClasses.primaryText.split(' ')[0]} transition-colors font-medium`}>Demo</button>
             </div>
             <div className="flex items-center space-x-4">
               <button
@@ -192,7 +201,7 @@ const LexiLinguaHomepage = () => {
                   <Moon className={`w-5 h-5 ${themeClasses.primaryText}`} />
                 )}
               </button>
-              <button className={`${themeClasses.primaryBtn} text-white px-6 py-2 rounded-lg transition-colors font-medium`}>
+              <button onClick={goToUpload} className={`${themeClasses.primaryBtn} text-white px-6 py-2 rounded-lg transition-colors font-medium`}>
                 Get Started
               </button>
             </div>
@@ -211,11 +220,12 @@ const LexiLinguaHomepage = () => {
               </span>
             </h1>
             <p className={`text-lg ${themeClasses.mutedText} mb-4 leading-relaxed`}>
-              LexiLingua is an artificial intelligence platform that simplifies complex legal documents into clear, actionable information in your preferred language. Created for ordinary citizens, freelancers, and small business owners who need legal clarity without expensive lawyers.
+              LexiLingua is an artificial intelligence platform powered by Google's advanced Gemini AI that simplifies complex legal documents into clear, actionable information in your preferred language. Created for ordinary citizens, freelancers, and small business owners who need legal clarity without expensive lawyers.
             </p>
             <div className={`${isDarkMode ? 'bg-gray-700' : 'bg-amber-200'} rounded-lg p-3 mb-4`}>
-              <p className={`text-base ${themeClasses.primaryText} font-medium`}>
-                ✨ Get instant detailed reports with summary, risk rating, and interactive Q&A to make confident decisions with full information.
+              <p className={`text-base ${themeClasses.primaryText} font-medium flex items-center justify-center gap-2`}>
+                <Bot className="w-5 h-5" />
+                ✨ Get instant detailed reports with Gemini AI-powered summary, risk rating, and interactive Q&A to make confident decisions with full information.
               </p>
             </div>
             
@@ -232,102 +242,14 @@ const LexiLinguaHomepage = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
-              <button className={`${themeClasses.primaryBtn} text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-lg text-base`}>
+              <button onClick={goToUpload} className={`${themeClasses.primaryBtn} text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-lg text-base flex items-center gap-2`}>
+                <Upload className="w-5 h-5" />
                 Upload Document Now
               </button>
-              <button className={`border-2 ${themeClasses.secondaryBtn} px-6 py-3 rounded-lg font-semibold transition-colors text-base`}>
+              <button onClick={goToDemo} className={`border-2 ${themeClasses.secondaryBtn} px-6 py-3 rounded-lg font-semibold transition-colors text-base flex items-center gap-2`}>
+                <Eye className="w-5 h-5" />
                 See How It Works
               </button>
-            </div>
-          </div>
-          
-          {/* Enhanced Upload Section - Appears on Scroll */}
-          <div className={`max-w-6xl mx-auto mt-8 transition-all duration-700 ease-in-out transform ${
-            showUploadBox 
-              ? 'opacity-100 translate-y-0 scale-100' 
-              : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
-          }`}>
-            <div 
-              className={`relative ${themeClasses.uploadBg} border-2 border-dashed rounded-2xl p-8 transition-all duration-300 shadow-lg ${uploadHover ? `${themeClasses.uploadBorder} shadow-xl` : `${themeClasses.border}`}`}
-              onMouseEnter={() => setUploadHover(true)}
-              onMouseLeave={() => setUploadHover(false)}
-            >
-              <div className="text-center mb-6">
-                <div className={`w-16 h-16 ${isDarkMode ? 'bg-gray-600' : 'bg-amber-200'} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                  <Upload className={`w-8 h-8 ${themeClasses.secondaryText}`} />
-                </div>
-                <h3 className={`text-xl font-semibold ${themeClasses.primaryText} mb-2`}>Upload Your Legal Document</h3>
-                <p className={`${themeClasses.mutedText} mb-4`}>PDF, Image, Handwritten - All formats supported</p>
-              </div>
-
-              {/* Language Selection Section */}
-              <div className="grid md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className={`block text-sm font-medium ${themeClasses.primaryText} mb-2`}>
-                    1. What language is your document in?
-                  </label>
-                  <div className="space-y-3">
-                    <select className={`w-full p-3 border ${themeClasses.border} rounded-lg ${themeClasses.cardBg} ${themeClasses.primaryText} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}>
-                      <option value="auto">🤖 Auto-Detect Language</option>
-                      <option value="en">🇺🇸 English</option>
-                      <option value="es">🇪🇸 Spanish</option>
-                      <option value="fr">🇫🇷 French</option>
-                      <option value="de">🇩🇪 German</option>
-                      <option value="it">🇮🇹 Italian</option>
-                      <option value="pt">🇵🇹 Portuguese</option>
-                      <option value="ru">🇷🇺 Russian</option>
-                      <option value="zh">🇨🇳 Chinese</option>
-                      <option value="ja">🇯🇵 Japanese</option>
-                      <option value="ar">🇸🇦 Arabic</option>
-                      <option value="hi">🇮🇳 Hindi</option>
-                    </select>
-                    <div className={`p-3 ${isDarkMode ? 'bg-blue-900 border-blue-700 text-blue-300' : 'bg-blue-100 border-blue-400 text-blue-800'} border rounded-lg text-sm text-center font-medium`}>
-                      ✨ AI-Powered Detection
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium ${themeClasses.primaryText} mb-2`}>
-                    2. Which language would you like the analysis in?
-                  </label>
-                  <select className={`w-full p-3 border ${themeClasses.border} rounded-lg ${themeClasses.cardBg} ${themeClasses.primaryText} focus:ring-2 focus:ring-green-500 focus:border-transparent`}>
-                    <option value="en">🇺🇸 English</option>
-                    <option value="es">🇪🇸 Spanish</option>
-                    <option value="fr">🇫🇷 French</option>
-                    <option value="de">🇩🇪 German</option>
-                    <option value="it">🇮🇹 Italian</option>
-                    <option value="pt">🇵🇹 Portuguese</option>
-                    <option value="ru">🇷🇺 Russian</option>
-                    <option value="zh">🇨🇳 Chinese</option>
-                    <option value="ja">🇯🇵 Japanese</option>
-                    <option value="ar">🇸🇦 Arabic</option>
-                    <option value="hi">🇮🇳 Hindi</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Upload Button */}
-              <div className={`border-2 border-dashed ${themeClasses.border} rounded-xl p-8 mb-6 hover:${themeClasses.borderHover} transition-colors cursor-pointer`}>
-                <div className="text-center">
-                  <FileText className={`w-16 h-16 ${themeClasses.mutedText} mx-auto mb-3`} />
-                  <p className={`${themeClasses.primaryText} font-medium mb-2 text-lg`}>Drop your file here or click to browse</p>
-                  <p className={`${themeClasses.mutedText} text-sm`}>Supports: PDF, DOC, JPG, PNG, Handwritten documents</p>
-                </div>
-              </div>
-
-              {/* Processing Features */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className={`${isDarkMode ? 'bg-green-900 border-green-700 text-green-300' : 'bg-green-100 border-green-400 text-green-800'} border px-4 py-3 rounded-lg text-sm font-medium text-center`}>
-                  ✓ Risk Analysis
-                </div>
-                <div className={`${isDarkMode ? 'bg-blue-900 border-blue-700 text-blue-300' : 'bg-blue-100 border-blue-400 text-blue-800'} border px-4 py-3 rounded-lg text-sm font-medium text-center`}>
-                  ✓ Plain Summary
-                </div>
-                <div className={`${isDarkMode ? 'bg-purple-900 border-purple-700 text-purple-300' : 'bg-purple-100 border-purple-400 text-purple-800'} border px-4 py-3 rounded-lg text-sm font-medium text-center`}>
-                  ✓ Next Steps
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -444,7 +366,7 @@ const LexiLinguaHomepage = () => {
 
             {/* Call to Action */}
             <div className="text-center mt-12">
-              <button className={`${themeClasses.primaryBtn} text-white px-8 py-4 rounded-lg font-semibold transition-colors shadow-lg text-lg flex items-center justify-center gap-3 mx-auto`}>
+              <button onClick={goToUpload} className={`${themeClasses.primaryBtn} text-white px-8 py-4 rounded-lg font-semibold transition-colors shadow-lg text-lg flex items-center justify-center gap-3 mx-auto`}>
                 <Upload className="w-6 h-6" />
                 Solve These Problems with LexiLingua
                 <ArrowRight className="w-6 h-6" />
@@ -530,7 +452,7 @@ const LexiLinguaHomepage = () => {
                     <span>Receive clear action steps</span>
                   </div>
                 </div>
-                <button className={`w-full ${themeClasses.primaryBtn} text-white py-4 rounded-lg font-semibold transition-colors shadow-lg flex items-center justify-center gap-2 mt-6`}>
+                <button onClick={goToUpload} className={`w-full ${themeClasses.primaryBtn} text-white py-4 rounded-lg font-semibold transition-colors shadow-lg flex items-center justify-center gap-2 mt-6`}>
                   Begin Analysis
                   <ArrowRight className="w-5 h-5" />
                 </button>
@@ -551,10 +473,12 @@ const LexiLinguaHomepage = () => {
             Get professional-grade analysis in minutes, not days.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className={`${isDarkMode ? 'bg-white text-gray-800 hover:bg-gray-100' : 'bg-amber-100 text-amber-900 hover:bg-amber-200'} px-12 py-4 rounded-lg font-semibold transition-colors shadow-lg text-lg`}>
+            <button onClick={goToUpload} className={`${isDarkMode ? 'bg-white text-gray-800 hover:bg-gray-100' : 'bg-amber-100 text-amber-900 hover:bg-amber-200'} px-12 py-4 rounded-lg font-semibold transition-colors shadow-lg text-lg flex items-center gap-2`}>
+              <Upload className="w-5 h-5" />
               Upload Your Document
             </button>
-            <button className={`border-2 ${isDarkMode ? 'border-gray-400 text-white hover:border-gray-300 hover:bg-gray-700' : 'border-amber-300 text-white hover:border-amber-200 hover:bg-amber-800'} px-12 py-4 rounded-lg font-semibold transition-colors text-lg`}>
+            <button onClick={goToDemo} className={`border-2 ${isDarkMode ? 'border-gray-400 text-white hover:border-gray-300 hover:bg-gray-700' : 'border-amber-300 text-white hover:border-amber-200 hover:bg-amber-800'} px-12 py-4 rounded-lg font-semibold transition-colors text-lg flex items-center gap-2`}>
+              <Eye className="w-5 h-5" />
               Schedule Demo
             </button>
           </div>
